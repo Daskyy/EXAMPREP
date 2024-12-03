@@ -32,33 +32,49 @@ import graphql.kickstart.tools.GraphQLMutationResolver;
 
 public class PersonMutationResolver implements GraphQLMutationResolver
 {
-	public Person create( final String firstName, final String lastName )
+	public Person create(final String firstName, final String lastName)
 	{
-		final Person person = new Person( );
-		person.setFirstName( firstName );
-		person.setLastName( lastName );
+		final Person person = new Person();
+		person.setFirstName(firstName);
+		person.setLastName(lastName);
 
-		final Address address = new Address( );
-		address.setName( "Work" );
-		address.setStreet( "Secret Street" );
-		address.setCity( "London" );
+		final Address address = new Address();
+		address.setName("Work");
+		address.setStreet("Secret Street");
+		address.setCity("London");
 
-		person.setAddress( address );
+		person.setAddress(address);
 
-		PersonInMemoryStorage.getInstance( ).create( person );
+		PersonInMemoryStorage.getInstance().create(person);
 
 		return person;
 	}
 
-	public Person update( final PersonInput personInput )
+	public Person update(final PersonInput personInput)
 	{
-		// TODO fill this method
-		return new Person();
+		PersonInMemoryStorage storage = PersonInMemoryStorage.getInstance();
+		Person person = storage.readById(personInput.getId()).orElseGet( null );
+
+		if (person == null)
+		{
+			return null;
+		}
+
+		person.setFirstName(personInput.getFirstName());
+		person.setLastName(personInput.getLastName());
+
+		storage.update(person);
+		return person;
 	}
 
-	public Boolean delete( final long id )
+	public Boolean delete(final long id)
 	{
-		// TODO fill this method
-		return true;
+		PersonInMemoryStorage storage = PersonInMemoryStorage.getInstance();
+		if (storage.readById(id).isPresent())
+		{
+			storage.delete(id);
+			return true;
+		}
+		return false;
 	}
 }

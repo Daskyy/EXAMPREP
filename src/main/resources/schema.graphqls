@@ -1,15 +1,9 @@
-type Query
+type Address
 {
-    person( id: Int! ): Person
-    persons: [Person!]!
-    personsByName( lastName: String! ): [Person!]!
-}
-
-type Mutation
-{
-    create( firstName: String!, lastName: String! ): Person
-    update( person: PersonInput! ) : Person
-    delete( id: Int! ) : Boolean
+    name: String!
+    street: String!
+    city: String!
+    zipCode: String!
 }
 
 input PersonInput
@@ -27,11 +21,16 @@ type Person
     address: Address
 }
 
-type Address
+type Query
 {
-    name: String!
-    street: String!
-    city: String!
-    zipCode: String!
+    person( id: Int! ): Person
+    persons: [Person!]!
+    personsByName( lastName: String! ): [Person!]!
 }
 
+type Mutation
+{
+    create( firstName: String!, lastName: String! ): Person
+    update( person: PersonInput! ) : Person
+    delete( id: Int! ) : Boolean
+}
